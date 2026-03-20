@@ -1,0 +1,88 @@
+{
+  "name": "接入 Supabase 数据库",
+  "description": "将本地开发环境的数据库从 SQLite 切换为 Supabase（托管 PostgreSQL），通过直接 PostgreSQL 连接字符串方式接入，复用现有 GORM + PostgreSQL 代码路径，仅修改连接配置。",
+  "branchName": "ralph/supabase-integration",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "添加 Supabase 连接字符串支持",
+      "description": "As a developer, I want to configure a Supabase PostgreSQL connection via environment variables so that I can use Supabase as the database backend without code changes.",
+      "acceptanceCriteria": [
+        "`SQL_DSN` 环境变量支持 Supabase 标准连接格式：`postgresql://postgres:[password]@db.[project-ref].supabase.co:5432/postgres`",
+        "`SQL_DSN` 同时支持 Supabase 连接池格式（pgBouncer）：`postgresql://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres`",
+        "设置 `SQL_DSN` 后，系统自动识别为 PostgreSQL 模式（`common.UsingPostgreSQL = true`）",
+        "启动日志正确打印数据库类型为 PostgreSQL",
+        "`go build ./...` passes",
+        "`go test ./...` passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "重点关注 model/main.go 中的数据库连接初始化逻辑，以及 common/ 目录下 SQL_DSN 环境变量的实际变量名",
+      "dependsOn": [],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-002",
+      "title": "验证 Supabase SSL 连接配置",
+      "description": "As a developer, I want to ensure SSL/TLS connections to Supabase work correctly so that the connection is secure and stable.",
+      "acceptanceCriteria": [
+        "Supabase 要求 SSL，连接字符串中正确处理 `sslmode` 参数（默认 `require`）",
+        "如当前 GORM 配置不支持 SSL 参数透传，添加必要的 DSN 解析处理",
+        "连接成功建立，无 SSL 握手错误",
+        "连接池配置（最大连接数、空闲连接数）适配 Supabase 免费层限制（最多 60 连接）",
+        "`go build ./...` passes",
+        "`go test ./...` passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Supabase 直连端口 5432，pgBouncer 端口 6543；免费层最多 60 个直连，建议使用连接池",
+      "dependsOn": [
+        "US-001"
+      ]
+    },
+    {
+      "id": "US-003",
+      "title": "验证 PostgreSQL 代码路径与 Supabase 兼容性",
+      "description": "As a developer, I want to verify that all existing PostgreSQL-compatible code works correctly with Supabase so that I don't encounter runtime errors.",
+      "acceptanceCriteria": [
+        "GORM AutoMigrate 在 Supabase 上成功执行，所有表正常创建",
+        "`commonGroupCol`、`commonKeyCol` 等 PostgreSQL 专用列引用正常工作",
+        "`commonTrueVal`/`commonFalseVal` 布尔值处理正确（PostgreSQL 使用 `true`/`false`）",
+        "基础 CRUD 操作（用户、渠道、令牌）在 Supabase 上正常运行",
+        "所有现有 `go test ./...` 测试通过",
+        "`go build ./...` passes",
+        "`go test ./...` passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "",
+      "dependsOn": [
+        "US-001",
+        "US-002"
+      ]
+    },
+    {
+      "id": "US-004",
+      "title": "创建多环境配置示例文件",
+      "description": "As a developer, I want clear environment configuration examples for different deployment scenarios so that I can quickly set up any environment.",
+      "acceptanceCriteria": [
+        "在项目根目录创建或更新 `.env.example`，包含 Supabase 连接字符串示例（密码占位符）",
+        "注释说明 Supabase 直连 vs 连接池两种格式的区别和适用场景",
+        "添加开发环境（Supabase）和生产环境（自托管 PostgreSQL）的示例配置",
+        "`README` 或 `docs/` 中更新数据库配置说明，新增 Supabase 配置章节",
+        "`.gitignore` 确认包含 `.env`（不提交真实凭据）",
+        "`go build ./...` passes",
+        "`go test ./...` passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "",
+      "dependsOn": [
+        "US-001"
+      ]
+    }
+  ],
+  "metadata": {
+    "updatedAt": "2026-03-20T13:58:21.023Z"
+  }
+}

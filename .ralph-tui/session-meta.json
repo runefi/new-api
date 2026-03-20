@@ -1,0 +1,14 @@
+{
+  "id": "23466ff9-d29a-49e8-b403-0aabde856dc7",
+  "status": "running",
+  "startedAt": "2026-03-20T13:53:19.735Z",
+  "updatedAt": "2026-03-20T13:53:19.735Z",
+  "agentPlugin": "claude",
+  "trackerPlugin": "json",
+  "prdPath": "./tasks/prd.json",
+  "currentIteration": 0,
+  "maxIterations": 10,
+  "totalTasks": 0,
+  "tasksCompleted": 0,
+  "cwd": "/Users/liyu/Github/ai-openapi/new-api"
+}

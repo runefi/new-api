@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "sessionId": "23466ff9-d29a-49e8-b403-0aabde856dc7",
+  "status": "running",
+  "startedAt": "2026-03-20T13:53:19.967Z",
+  "updatedAt": "2026-03-20T13:58:21.023Z",
+  "currentIteration": 0,
+  "maxIterations": 10,
+  "tasksCompleted": 0,
+  "isPaused": false,
+  "agentPlugin": "claude",
+  "trackerState": {
+    "plugin": "json",
+    "prdPath": "./tasks/prd.json",
+    "totalTasks": 4,
+    "tasks": [
+      {
+        "id": "US-001",
+        "title": "添加 Supabase 连接字符串支持",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-002",
+        "title": "验证 Supabase SSL 连接配置",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-003",
+        "title": "验证 PostgreSQL 代码路径与 Supabase 兼容性",
+        "status": "open",
+        "completedInSession": false
+      },
+      {
+        "id": "US-004",
+        "title": "创建多环境配置示例文件",
+        "status": "open",
+        "completedInSession": false
+      }
+    ]
+  },
+  "iterations": [],
+  "skippedTaskIds": [],
+  "cwd": "/Users/liyu/Github/ai-openapi/new-api",
+  "activeTaskIds": [],
+  "subagentPanelVisible": false
+}
